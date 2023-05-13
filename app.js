@@ -12,6 +12,7 @@ const io = require("socket.io")(server, {
 io.on("connection", (client) => {
   client.on("gyroscope", (data) => {
     console.log(data);
+    io.emit("gyroscopeCapture", { data });
   });
   client.on("disconnect", () => {
     console.log("disconnect");
