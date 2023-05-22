@@ -12,19 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addCompany = exports.getCompanies = exports.updateUserEmail = exports.updateCoverPicture = exports.updateProfilePicture = exports.changeUserRole = exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+exports.updateUserEmail = exports.changeUserRole = exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = void 0;
 const UserRepository_1 = __importDefault(require("../repository/UserRepository"));
 const ChangeUserRoleRequest_1 = require("../DTOs/User/ChangeUserRoleRequest");
 const UpdateUserRequest_1 = require("../DTOs/User/UpdateUserRequest");
 const error_1 = require("../core/enums/error");
 const success_1 = require("../core/enums/success");
-const ImageService_1 = __importDefault(require("../service/ImageService"));
 const UpdateUserEmailRequest_1 = require("../DTOs/Account/UpdateUserEmailRequest");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const CompanyRepository_1 = __importDefault(require("../repository/CompanyRepository"));
-const AddCompanyRequest_1 = require("../DTOs/User/AddCompanyRequest");
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.json(yield UserRepository_1.default.getAllUsers());
 });
@@ -67,24 +62,6 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.deleteUser = deleteUser;
-const updateProfilePicture = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const error = ImageService_1.default.validateImage(req.file);
-    if (error)
-        return res.status(400).json({ error });
-    const image = yield ImageService_1.default.uploadImage(req.file);
-    const user = yield UserRepository_1.default.updateProfilePicture(req.params.id, image.url);
-    res.json(user);
-});
-exports.updateProfilePicture = updateProfilePicture;
-const updateCoverPicture = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const error = ImageService_1.default.validateImage(req.file);
-    if (error)
-        return res.status(400).json({ error });
-    const image = yield ImageService_1.default.uploadImage(req.file);
-    const user = yield UserRepository_1.default.updateCoverPicture(req.params.id, image.url);
-    res.json(user);
-});
-exports.updateCoverPicture = updateCoverPicture;
 const updateUserEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     UpdateUserEmailRequest_1.UpdateUserEmailRequest.parse(req.body);
     const user = yield UserRepository_1.default.getUserById(req.params.id);
@@ -98,14 +75,3 @@ const updateUserEmail = (req, res) => __awaiter(void 0, void 0, void 0, function
     res.json(updatedUser);
 });
 exports.updateUserEmail = updateUserEmail;
-const getCompanies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const companies = yield CompanyRepository_1.default.getCompaniesByUser(req.params.id);
-    return res.json(companies);
-});
-exports.getCompanies = getCompanies;
-const addCompany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    AddCompanyRequest_1.AddCompanyRequest.parse(req.body);
-    const company = yield UserRepository_1.default.addCompany(req.params.id, req.body);
-    return res.json(company);
-});
-exports.addCompany = addCompany;

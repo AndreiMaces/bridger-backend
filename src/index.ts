@@ -2,7 +2,7 @@ require("dotenv").config();
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import multer from "multer";
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

@@ -32,7 +32,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     const user = yield UserRepository_1.default.createUser(req.body);
     const emailConfirmation = yield EmailConfirmationRepository_1.default.createEmailConfirmation(user.id);
-    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: http://localhost:3000/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 });
 exports.signup = signup;
@@ -48,7 +48,7 @@ const resendEmailConfirmation = (req, res) => __awaiter(void 0, void 0, void 0, 
             error: error_1.Error.EMAIL_ALREADY_CONFIRMED,
         });
     const emailConfirmation = yield EmailConfirmationRepository_1.default.getEmailConfirmationByUserId(user.id);
-    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: http://localhost:3000/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 });
 exports.resendEmailConfirmation = resendEmailConfirmation;
@@ -90,7 +90,7 @@ const sendEmailForgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, 
             error: error_1.Error.USER_NOT_FOUND,
         });
     const passwordResetToken = yield PasswordResetTokenRepository_1.default.createPasswordResetToken(user.id);
-    EmailService_1.default.sendEmail(user.email, "Reset password", `To reset password open following link: http://localhost:3000/auth/reset-password/${passwordResetToken.id}`);
+    EmailService_1.default.sendEmail(user.email, "Reset password", `To reset password open following link: https://www.theentrepreneurialdashboard.com/auth/reset-password/${passwordResetToken.id}`);
     return res.json(user);
 });
 exports.sendEmailForgotPassword = sendEmailForgotPassword;

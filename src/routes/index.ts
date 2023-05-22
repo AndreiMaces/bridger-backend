@@ -14,7 +14,4 @@ HandledRouter.use("/account", validateToken, accountRoutes);
 import authRoutes from "./auth";
 HandledRouter.use("/auth", authRoutes);
 
-import companyRoutes from "./company";
-HandledRouter.use("/companies", validateToken, companyRoutes);
-
 export default HandledRouter;
