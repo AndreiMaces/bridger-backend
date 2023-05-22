@@ -1,0 +1,6 @@
+{
+  "ext": "ts",
+  "events": {
+    "restart": "tsc && node index.js"
+  }
+}
