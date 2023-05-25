@@ -14,7 +14,6 @@ import { ResetPasswordRequest } from "../DTOs/Account/ResetPasswordRequest";
 
 const signup = async (req: GenericRequest<typeof AuthRegisterRequest>, res: Response) => {
     AuthRegisterRequest.parse(req.body);
-
     if (await UserRepository.getUserByEmail(req.body.email) !== null)
       return res.status(400).json({
         error: ErrorString.USER_ALREADY_EXISTS,
@@ -22,7 +21,7 @@ const signup = async (req: GenericRequest<typeof AuthRegisterRequest>, res: Resp
 
     const user = await UserRepository.createUser(req.body);
     const emailConfirmation = await EmailConfirmationRepository.createEmailConfirmation(user.id);
-    EmailService.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService.sendEmail(user.email, "Email confirmation", `To confirm email open following link: http://localhost:3000/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 };
 

@@ -32,7 +32,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     const user = yield UserRepository_1.default.createUser(req.body);
     const emailConfirmation = yield EmailConfirmationRepository_1.default.createEmailConfirmation(user.id);
-    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: http://localhost:3000/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 });
 exports.signup = signup;

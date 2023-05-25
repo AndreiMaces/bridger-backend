@@ -14,4 +14,7 @@ HandledRouter.use("/account", validateToken, accountRoutes);
 import authRoutes from "./auth";
 HandledRouter.use("/auth", authRoutes);
 
+import mobileRoutes from "./mobile";
+HandledRouter.use("/mobile", mobileRoutes);
+
 export default HandledRouter;

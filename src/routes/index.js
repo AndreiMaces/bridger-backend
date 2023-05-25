@@ -13,6 +13,6 @@ const account_1 = __importDefault(require("./account"));
 HandledRouter.use("/account", validateJwt_1.default, account_1.default);
 const auth_1 = __importDefault(require("./auth"));
 HandledRouter.use("/auth", auth_1.default);
-const company_1 = __importDefault(require("./company"));
-HandledRouter.use("/companies", validateJwt_1.default, company_1.default);
+const mobile_1 = __importDefault(require("./mobile"));
+HandledRouter.use("/mobile", mobile_1.default);
 exports.default = HandledRouter;

@@ -4,36 +4,10 @@ import { IUserRepository } from "./IRepository/IUserRepository";
 import bcrypt from "bcrypt";
 import TokenRepository from "./TokenRepository";
 import PasswordResetTokenRepository from "./PasswordResetTokenRepository";
-import { AddCompanyRequest } from "../DTOs/User/AddCompanyRequest";
 const prisma = new PrismaClient();
 
 class UserRepository implements IUserRepository
 {
-    async getCompanies(id: string): Promise<any> {
-         const user = await prisma.user.findUnique({
-            where: {
-                id: id,
-            },
-            include: {
-                company: true,
-            },
-        });
-    }
-    addCompany(id: string, company: any): Promise<any> {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                company: {
-                    create: {
-                        name: company.name,
-                        description: company.description,
-                    }
-                }
-            }
-        });
-    }
     updateEmail(id: string, newEmail: string): Promise<User> {
         return prisma.user.update({
             where: {
@@ -41,26 +15,6 @@ class UserRepository implements IUserRepository
             },
             data: {
                 email: newEmail,
-            },
-        });
-    }
-    updateProfilePicture(id: string, profileImageUrl: string): Promise<User> {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                profileImageUrl: profileImageUrl,
-            },
-        });
-    }
-    updateCoverPicture(id: string, coverImageUrl: string): Promise<User> {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                coverImageUrl: coverImageUrl,
             },
         });
     }
@@ -168,6 +122,21 @@ class UserRepository implements IUserRepository
             },
             data: {
                 password: bcrypt.hashSync(newPassword, 10),
+            },
+        });
+    }
+
+    addDevice(id: string, name: string): Promise<User | null> {
+        return prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                devices: {
+                    create: {
+                        name: name,
+                    },
+                },
             },
         });
     }

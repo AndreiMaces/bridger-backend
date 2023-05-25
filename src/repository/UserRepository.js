@@ -19,33 +19,6 @@ const TokenRepository_1 = __importDefault(require("./TokenRepository"));
 const PasswordResetTokenRepository_1 = __importDefault(require("./PasswordResetTokenRepository"));
 const prisma = new client_1.PrismaClient();
 class UserRepository {
-    getCompanies(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const user = yield prisma.user.findUnique({
-                where: {
-                    id: id,
-                },
-                include: {
-                    company: true,
-                },
-            });
-        });
-    }
-    addCompany(id, company) {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                company: {
-                    create: {
-                        name: company.name,
-                        description: company.description,
-                    }
-                }
-            }
-        });
-    }
     updateEmail(id, newEmail) {
         return prisma.user.update({
             where: {
@@ -53,26 +26,6 @@ class UserRepository {
             },
             data: {
                 email: newEmail,
-            },
-        });
-    }
-    updateProfilePicture(id, profileImageUrl) {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                profileImageUrl: profileImageUrl,
-            },
-        });
-    }
-    updateCoverPicture(id, coverImageUrl) {
-        return prisma.user.update({
-            where: {
-                id: id,
-            },
-            data: {
-                coverImageUrl: coverImageUrl,
             },
         });
     }
@@ -184,6 +137,20 @@ class UserRepository {
                     password: bcrypt_1.default.hashSync(newPassword, 10),
                 },
             });
+        });
+    }
+    addDevice(id, name) {
+        return prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                devices: {
+                    create: {
+                        name: name,
+                    },
+                },
+            },
         });
     }
 }
