@@ -53,21 +53,26 @@ io.on("connection", (socket: Socket) => {
       }, 500);
 
       userOptions[key].devices.forEach((device: any) => {
-        console.log(device)
-        if (device.hasGyroscope)
+        console.log(device);
+        if (device.hasGyroscope) {
           socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
             io.emit(device.link + "gyroscope", gyroscopeData);
             console.log("Gyroscope data: ", gyroscopeData);
           });
-          if (device.hasAccelerometer)
+        }
+
+        if (device.hasAccelerometer) {
           socket.on(device.link + "accelerometer", (accelerometerData: any) => {
             io.emit(device.link + "accelerometer", accelerometerData);
           });
-          if(device.hasDeviceMotion)
+        }
+
+        if (device.hasDeviceMotion) {
           socket.on(device.link + "deviceMotion", (deviceMotionData: any) => {
             io.emit(device.link + "deviceMotion", deviceMotionData);
           });
-        });
+        }
+      });
     });
   });
   socket.on("forceDisconnect", function () {
