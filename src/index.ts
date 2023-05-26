@@ -30,7 +30,6 @@ const io = require("socket.io")(server, {
 let userOptions = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
-    console.log(data);
     if (!userOptions[data.userId]) userOptions[data.userId] = {};
     if (!userOptions[data.userId].devices)
       userOptions[data.userId].devices = [];
@@ -48,8 +47,6 @@ io.on("connection", (socket: Socket) => {
         hasDeviceMotion: true,
       });
 
-    console.log(userOptions);
-
     Object.keys(userOptions).forEach((key) => {
       setInterval(() => {
         io.emit(key + "online-users", userOptions[key].devices);
@@ -59,6 +56,7 @@ io.on("connection", (socket: Socket) => {
         if (device.hasGyroscope)
           socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
             io.emit(device.link + "gyroscope", gyroscopeData);
+            console.log("Gyroscope data: ", gyroscopeData);
           });
           if (device.hasAccelerometer)
           socket.on(device.link + "accelerometer", (accelerometerData: any) => {
