@@ -30,7 +30,7 @@ let users = {};
 io.on("connection", (socket: Socket) => {
   let userId = "";
   socket.on("join", (data: any) => {
-    const link = sha256(data.userId + data.deviceName);
+    const link = sha256(data.userId + data.deviceIp);
     console.log(data)
     users = {...users, [data.userId]: []}
     //@ts-ignore
@@ -43,7 +43,7 @@ io.on("connection", (socket: Socket) => {
     }, 500);
     console.log(link + "gyroscope")
     socket.on(link + "gyroscope", (gyroscopeData: any) => {
-      console.log(data.userId)
+      console.log(link)
       io.emit(link + "gyroscope", gyroscopeData);
     })
   })
