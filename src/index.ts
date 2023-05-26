@@ -1,3 +1,4 @@
+// @ts-nocheck
 require("dotenv").config();
 import express from "express";
 import bodyParser from "body-parser";
@@ -26,27 +27,29 @@ const io = require('socket.io')(server, {
   }
 });
 
-let users = {};
+let userOptions = {};
 io.on("connection", (socket: Socket) => {
   let userId = "";
   socket.on("join", (data: any) => {
-    const link = sha256(data.userId + data.deviceIp);
     console.log(data)
-    //@ts-ignore
-    if(!users[data.userId]) users = {...users, [data.userId]: []}
-    //@ts-ignore
-    users[data.userId].push({ deviceIp: data.deviceIp, link });
-    //@ts-ignore
-    io.emit(data.userId + 'online-users', users[data.userId]);
-    console.log(users)
-    setInterval(() => {
-      //@ts-ignore
-      io.emit(data.userId + 'online-users', users[data.userId]);
-    }, 500);
-    console.log(link + "gyroscope")
-    socket.on(link + "gyroscope", (gyroscopeData: any) => {
-      io.emit(link + "gyroscope", gyroscopeData);
-    })
+    userOptions[data.userId].link = sha256(data.userId + data.deviceIp);
+    userOptions[data.userId].hasGyroscope = true;
+    userOptions[data.userId].devices = {};
+    if(!userOptions[data.userId].devices) userOptions[data.userId].devices = {...userOptions[data.userId].devices, [data.userId]: []}
+    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link });
+
+    console.log(userOptions)
+
+    Object.keys(userOptions).forEach((key) => {
+      setInterval(() => {
+        io.emit(key + 'online-users', users[key].devices);
+      }, 500);
+      if(users[key].hasGyroscope)
+        socket.on(users[key].link + "gyroscope", (gyroscopeData: any) => {
+          io.emit(users[key].link + "gyroscope", gyroscopeData);
+        })
+    });
+
   })
   socket.on('forceDisconnect', function(){
     socket.disconnect();
