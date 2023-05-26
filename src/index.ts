@@ -27,17 +27,19 @@ const io = require('socket.io')(server, {
 
 let users = {};
 io.on("connection", (socket: Socket) => {
+  let userId = "";
   socket.on("join", (data: any) => {
+    userId = data.userId;
     console.log(data)
     users = {...users, [data.userId]: []}
     //@ts-ignore
     users[data.userId].push({mac: data.mac, roomId: data.userId});
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
-    socket.on(data.userId + "gyroscope", (data: any) => {
-      console.log(data)
-      io.emit(data.userId + "gyroscope", data);
-    });
+  })
+  socket.on(userId + "gyroscope", (data: any) => {
+    console.log(data)
+    io.emit(userId + "gyroscope", data);
   })
 })
 
