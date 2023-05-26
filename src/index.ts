@@ -64,7 +64,10 @@ io.on("connection", (socket: Socket) => {
         socket.on(device.link + "deviceMotion" , (deviceMotionData: any) => {
           io.emit(device.link + "deviceMotion", deviceMotionData);
         })
-        
+        socket.on(device.link + "deviceMotionOrientation" , (deviceMotionOrientationData: any) => {
+          io.emit(device.link + "deviceMotionOrientation", deviceMotionOrientationData);
+        }
+        );
       });
     });
   });
