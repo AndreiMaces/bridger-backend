@@ -36,7 +36,10 @@ io.on("connection", (socket: Socket) => {
     users[data.userId].push({mac: data.mac, roomId: data.userId});
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
-
+    setInterval(() => {
+      //@ts-ignore
+      io.emit(data.userId + 'online-users', users[data.userId]);
+    }, 500);
     socket.on(userId + "gyroscope", (gyroscopeData: any) => {
       console.log(data.userId)
       io.emit(userId + "gyroscope", gyroscopeData);
