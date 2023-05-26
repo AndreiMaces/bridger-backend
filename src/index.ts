@@ -34,9 +34,8 @@ io.on("connection", (socket: Socket) => {
     if(!userOptions[data.userId]) userOptions[data.userId] = {};
     userOptions[data.userId].link = sha256(data.userId + data.deviceIp);
     userOptions[data.userId].hasGyroscope = true;
-    userOptions[data.userId].devices = {};
-    if(!userOptions[data.userId].devices) userOptions[data.userId].devices = {...userOptions[data.userId].devices, [data.userId]: []}
-    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link });
+    if(!userOptions[data.userId].devices) userOptions[data.userId].devices = [];
+    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link: userOptions[data.userId].link });
 
     console.log(userOptions)
 
