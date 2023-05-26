@@ -66,8 +66,19 @@ io.on("connection", (socket: Socket) => {
         })
         socket.on(device.link + "deviceMotionOrientation" , (deviceMotionOrientationData: any) => {
           io.emit(device.link + "deviceMotionOrientation", deviceMotionOrientationData);
+        });
+        socket.on(device.link + "magnetometer", (magnetometerData: any) => {
+          io.emit(device.link + "magnetometer", magnetometerData);
+        });
+        socket.on(device.link + "barometer" , (barometerData: any) => {
+          io.emit(device.link + "barometer", barometerData);
         }
         );
+        socket.on(device.link + "lightSensor" , (lightSensorData: any) => {
+          io.emit(device.link + "lightSensor", lightSensorData);
+        }
+        );
+    
       });
     });
   });
