@@ -84,7 +84,7 @@ io.on("connection", (socket: Socket) => {
       });
     });
     socket.on("remove-device", (data: any) => {
-      console.log(data, userOptions)
+      console.log("Data", data)
       if(userOptions[data.userId])
       userOptions[data.userId].devices = userOptions[data.userId].devices.filter(
         (device: any) => device.deviceIp !== data.deviceIp
