@@ -13,6 +13,7 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, cors_1.default)());
 const index_1 = __importDefault(require("./routes/index"));
+const js_sha256_1 = require("js-sha256");
 app.use("/", index_1.default);
 // app.get("/", (req: any, res: { json: (arg0: { message: string }) => void }) => {
 //   res.json({ message: "Welcome to the application." });
@@ -25,16 +26,26 @@ const io = require('socket.io')(server, {
 });
 let users = {};
 io.on("connection", (socket) => {
+    let userId = "";
     socket.on("join", (data) => {
+        const link = (0, js_sha256_1.sha256)(data.userId + data.deviceName);
         console.log(data);
         users = Object.assign(Object.assign({}, users), { [data.userId]: [] });
-        if (data.userId === undefined || data.mac === undefined)
-            return;
         //@ts-ignore
-        users[data.userId].push({ mac: data.mac, roomId: socket.id });
-        socket.join(data.userId);
+        users[data.userId].push({ deviceIp: data.deviceIp, link });
         //@ts-ignore
-        io.to(data.userId).emit('online-users', users[data.userId]);
+        io.emit(data.userId + 'online-users', users[data.userId]);
+        setInterval(() => {
+            //@ts-ignore
+            io.emit(data.userId + 'online-users', users[data.userId]);
+        }, 500);
+        socket.on(link + "gyroscope", (gyroscopeData) => {
+            console.log(data.userId);
+            io.emit(link + "gyroscope", gyroscopeData);
+        });
+    });
+    socket.on('forceDisconnect', function () {
+        socket.disconnect();
     });
 });
 server.listen(PORT, () => {
