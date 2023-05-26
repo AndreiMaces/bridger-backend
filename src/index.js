@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// @ts-nocheck
 require("dotenv").config();
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
@@ -24,24 +25,26 @@ const io = require('socket.io')(server, {
         origin: "*",
     }
 });
-let users = {};
+let userOptions = {};
 io.on("connection", (socket) => {
     let userId = "";
     socket.on("join", (data) => {
-        const link = (0, js_sha256_1.sha256)(data.userId + data.deviceName);
         console.log(data);
-        users = Object.assign(Object.assign({}, users), { [data.userId]: [] });
-        //@ts-ignore
-        users[data.userId].push({ deviceIp: data.deviceIp, link });
-        //@ts-ignore
-        io.emit(data.userId + 'online-users', users[data.userId]);
-        setInterval(() => {
-            //@ts-ignore
-            io.emit(data.userId + 'online-users', users[data.userId]);
-        }, 500);
-        socket.on(link + "gyroscope", (gyroscopeData) => {
-            console.log(data.userId);
-            io.emit(link + "gyroscope", gyroscopeData);
+        userOptions[data.userId].link = (0, js_sha256_1.sha256)(data.userId + data.deviceIp);
+        userOptions[data.userId].hasGyroscope = true;
+        userOptions[data.userId].devices = {};
+        if (!userOptions[data.userId].devices)
+            userOptions[data.userId].devices = Object.assign(Object.assign({}, userOptions[data.userId].devices), { [data.userId]: [] });
+        userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link });
+        console.log(userOptions);
+        Object.keys(userOptions).forEach((key) => {
+            setInterval(() => {
+                io.emit(key + 'online-users', users[key].devices);
+            }, 500);
+            if (users[key].hasGyroscope)
+                socket.on(users[key].link + "gyroscope", (gyroscopeData) => {
+                    io.emit(users[key].link + "gyroscope", gyroscopeData);
+                });
         });
     });
     socket.on('forceDisconnect', function () {

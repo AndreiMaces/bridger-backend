@@ -29,9 +29,9 @@ const io = require('socket.io')(server, {
 
 let userOptions = {};
 io.on("connection", (socket: Socket) => {
-  let userId = "";
   socket.on("join", (data: any) => {
     console.log(data)
+    if(!userOptions[data.userId]) userOptions[data.userId] = {};
     userOptions[data.userId].link = sha256(data.userId + data.deviceIp);
     userOptions[data.userId].hasGyroscope = true;
     userOptions[data.userId].devices = {};
