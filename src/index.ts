@@ -32,7 +32,8 @@ io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
     const link = sha256(data.userId + data.deviceIp);
     console.log(data)
-    users = {...users, [data.userId]: []}
+    //@ts-ignore
+    if(!users[data.userId]) users = {...users, [data.userId]: []}
     //@ts-ignore
     users[data.userId].push({ deviceIp: data.deviceIp, link });
     //@ts-ignore
