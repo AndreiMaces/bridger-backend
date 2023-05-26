@@ -37,13 +37,13 @@ io.on("connection", (socket: Socket) => {
     users[data.userId].push({ deviceIp: data.deviceIp, link });
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
+    console.log(users)
     setInterval(() => {
       //@ts-ignore
       io.emit(data.userId + 'online-users', users[data.userId]);
     }, 500);
     console.log(link + "gyroscope")
     socket.on(link + "gyroscope", (gyroscopeData: any) => {
-      console.log(link)
       io.emit(link + "gyroscope", gyroscopeData);
     })
   })
