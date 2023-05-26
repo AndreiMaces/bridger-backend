@@ -32,7 +32,6 @@ io.on("connection", (socket: Socket) => {
     userId = data.userId;
     console.log(data)
     users = {...users, [data.userId]: []}
-
     //@ts-ignore
     users[data.userId].push({mac: data.mac, roomId: data.userId});
     //@ts-ignore
@@ -43,6 +42,9 @@ io.on("connection", (socket: Socket) => {
       io.emit(userId + "gyroscope", gyroscopeData);
     })
   })
+  socket.on('forceDisconnect', function(){
+    socket.disconnect();
+  });
 })
 
 server.listen(PORT, () => {
