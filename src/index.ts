@@ -32,10 +32,8 @@ io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
     console.log(data)
     if(!userOptions[data.userId]) userOptions[data.userId] = {};
-    userOptions[data.userId].link = sha256(data.userId + data.deviceIp);
-    userOptions[data.userId].hasGyroscope = true;
     if(!userOptions[data.userId].devices) userOptions[data.userId].devices = [];
-    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link: userOptions[data.userId].link });
+    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
 
     console.log(userOptions)
 
@@ -43,10 +41,14 @@ io.on("connection", (socket: Socket) => {
       setInterval(() => {
         io.emit(key + 'online-users', userOptions[key].devices);
       }, 500);
-      if(userOptions[key].hasGyroscope)
-        socket.on(userOptions[key].link + "gyroscope", (gyroscopeData: any) => {
-          io.emit(userOptions[key].link + "gyroscope", gyroscopeData);
-        })
+
+      userOptions[key].devices.forEach((device: any) => {
+        if(!device.hasGyroscope) return;
+        socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
+          io.emit(device.link  + 'gyroscope', gyroscopeData);
+        });
+      });
+      
     });
 
   })
