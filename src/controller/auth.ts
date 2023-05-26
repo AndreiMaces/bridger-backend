@@ -29,10 +29,6 @@ const resendEmailConfirmation = async (req: Request<typeof AuthLoginRequest>, re
   AuthLoginRequest.parse(req.body);
 
   const user = await UserRepository.getUserByEmail(req.body.email);
-  if (user === null || !bcrypt.compareSync(req.body.password, user.password)) 
-    return res.status(400).json({
-      error: ErrorString.INVALID_CREDENTIALS,
-    });
 
     if(user.isEmailConfirmed)
     return res.status(400).json({
@@ -40,7 +36,7 @@ const resendEmailConfirmation = async (req: Request<typeof AuthLoginRequest>, re
     });
     
     const emailConfirmation = await EmailConfirmationRepository.getEmailConfirmationByUserId(user.id);
-    EmailService.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.bridger.com/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 }
 
