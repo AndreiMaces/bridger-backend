@@ -30,6 +30,7 @@ const io = require("socket.io")(server, {
 let userOptions = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
+    console.log(data);
     if (!userOptions[data.userId]) userOptions[data.userId] = {};
     if (!userOptions[data.userId].devices)
       userOptions[data.userId].devices = [];
@@ -44,8 +45,9 @@ io.on("connection", (socket: Socket) => {
         link: sha256(data.userId + data.deviceIp),
         hasGyroscope: true,
         hasAccelerometer: true,
-        hasDeviceMotion: true,
       });
+
+    console.log(userOptions);
 
     Object.keys(userOptions).forEach((key) => {
       setInterval(() => {
@@ -53,25 +55,10 @@ io.on("connection", (socket: Socket) => {
       }, 500);
 
       userOptions[key].devices.forEach((device: any) => {
-        console.log(device);
-        if (device.hasGyroscope) {
-          socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
-            io.emit(device.link + "gyroscope", gyroscopeData);
-            console.log("Gyroscope data: ", gyroscopeData);
-          });
-        }
-
-        if (device.hasAccelerometer) {
-          socket.on(device.link + "accelerometer", (accelerometerData: any) => {
-            io.emit(device.link + "accelerometer", accelerometerData);
-          });
-        }
-
-        if (device.hasDeviceMotion) {
-          socket.on(device.link + "deviceMotion", (deviceMotionData: any) => {
-            io.emit(device.link + "deviceMotion", deviceMotionData);
-          });
-        }
+        if (!device.hasGyroscope) return;
+        socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
+          io.emit(device.link + "gyroscope", gyroscopeData);
+        });
       });
     });
   });
