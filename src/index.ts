@@ -29,7 +29,11 @@ let users = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
     console.log(data)
-    io.emit('online-users', data);
+    users = {...users, [data.userId]: []}
+    //@ts-ignore
+    users[data.userId].push({mac: data.mac, roomId: data.userId});
+    //@ts-ignore
+    io.emit(data.userId + 'online-users', users[data.userId]);
   })
 })
 
