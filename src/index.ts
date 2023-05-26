@@ -41,11 +41,11 @@ io.on("connection", (socket: Socket) => {
 
     Object.keys(userOptions).forEach((key) => {
       setInterval(() => {
-        io.emit(key + 'online-users', users[key].devices);
+        io.emit(key + 'online-users', userOptions[key].devices);
       }, 500);
-      if(users[key].hasGyroscope)
-        socket.on(users[key].link + "gyroscope", (gyroscopeData: any) => {
-          io.emit(users[key].link + "gyroscope", gyroscopeData);
+      if(userOptions[key].hasGyroscope)
+        socket.on(userOptions[key].link + "gyroscope", (gyroscopeData: any) => {
+          io.emit(userOptions[key].link + "gyroscope", gyroscopeData);
         })
     });
 
