@@ -33,7 +33,7 @@ io.on("connection", (socket: Socket) => {
     console.log(data)
     users = {...users, [data.userId]: []}
     //@ts-ignore
-    users[data.userId].push({mac: data.mac, roomId: data.userId});
+    users[data.userId].push(data);
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
     setInterval(() => {
