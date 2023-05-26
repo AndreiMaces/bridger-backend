@@ -46,8 +46,6 @@ io.on("connection", (socket: Socket) => {
         hasGyroscope: true,
       });
 
-    console.log(userOptions);
-
     Object.keys(userOptions).forEach((key) => {
       setInterval(() => {
         io.emit(key + "online-users", userOptions[key].devices);
@@ -86,6 +84,7 @@ io.on("connection", (socket: Socket) => {
       });
     });
     socket.on("remove-device", (data: any) => {
+      console.log(data, userOptions)
       if(userOptions[data.userId])
       userOptions[data.userId].devices = userOptions[data.userId].devices.filter(
         (device: any) => device.deviceIp !== data.deviceIp
