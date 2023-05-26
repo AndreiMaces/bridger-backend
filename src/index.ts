@@ -29,13 +29,7 @@ let users = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
     console.log(data)
-    users = {...users, [data.userId]: []}
-    if(data.userId === undefined || data.mac === undefined) return;
-    //@ts-ignore
-    users[data.userId].push({mac: data.mac, roomId: socket.id});
-    socket.join(data.userId);
-    //@ts-ignore
-    io.to(data.userId).emit('online-users', users[data.userId]);
+    io.emit('online-users', data);
   })
 })
 
