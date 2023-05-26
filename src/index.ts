@@ -53,6 +53,7 @@ io.on("connection", (socket: Socket) => {
       }, 500);
 
       userOptions[key].devices.forEach((device: any) => {
+        console.log(device)
         if (device.hasGyroscope)
           socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
             io.emit(device.link + "gyroscope", gyroscopeData);
