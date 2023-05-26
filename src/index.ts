@@ -20,43 +20,61 @@ app.use("/", routes);
 //   res.json({ message: "Welcome to the application." });
 // });
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server, {
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
   cors: {
     origin: "*",
-  }
+  },
 });
 
 let userOptions = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
-    console.log(data)
-    if(!userOptions[data.userId]) userOptions[data.userId] = {};
-    if(!userOptions[data.userId].devices) userOptions[data.userId].devices = [];
-    if(!userOptions[data.userId].devices.find((device: any) => device.deviceIp === data.deviceIp))
-      userOptions[data.userId].devices.push({ deviceInfo: data.deviceInfo, deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
+    console.log(data);
+    if (!userOptions[data.userId]) userOptions[data.userId] = {};
+    if (!userOptions[data.userId].devices)
+      userOptions[data.userId].devices = [];
+    if (
+      !userOptions[data.userId].devices.find(
+        (device: any) => device.deviceIp === data.deviceIp
+      )
+    )
+      userOptions[data.userId].devices.push({
+        deviceInfo: data.deviceInfo,
+        deviceIp: data.deviceIp,
+        link: sha256(data.userId + data.deviceIp),
+        hasGyroscope: true,
+        hasAccelerometer: true,
+        hasDeviceMotion: true,
+      });
 
-    console.log(userOptions)
+    console.log(userOptions);
 
     Object.keys(userOptions).forEach((key) => {
       setInterval(() => {
-        io.emit(key + 'online-users', userOptions[key].devices);
+        io.emit(key + "online-users", userOptions[key].devices);
       }, 500);
 
       userOptions[key].devices.forEach((device: any) => {
-        if(!device.hasGyroscope) return;
-        socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
-          io.emit(device.link  + 'gyroscope', gyroscopeData);
+        if (device.hasGyroscope)
+          socket.on(device.link + "gyroscope", (gyroscopeData: any) => {
+            io.emit(device.link + "gyroscope", gyroscopeData);
+          });
+          if (device.hasAccelerometer)
+          socket.on(device.link + "accelerometer", (accelerometerData: any) => {
+            io.emit(device.link + "accelerometer", accelerometerData);
+          });
+          if(device.hasDeviceMotion)
+          socket.on(device.link + "deviceMotion", (deviceMotionData: any) => {
+            io.emit(device.link + "deviceMotion", deviceMotionData);
+          });
         });
-      });
-
     });
-
-  })
-  socket.on('forceDisconnect', function(){
+  });
+  socket.on("forceDisconnect", function () {
     socket.disconnect();
   });
-})
+});
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);
