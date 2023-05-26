@@ -30,7 +30,6 @@ const io = require("socket.io")(server, {
 let userOptions = {};
 io.on("connection", (socket: Socket) => {
   socket.on("join", (data: any) => {
-    console.log(data);
     if (!userOptions[data.userId]) userOptions[data.userId] = {};
     if (!userOptions[data.userId].devices)
       userOptions[data.userId].devices = [];
@@ -83,14 +82,14 @@ io.on("connection", (socket: Socket) => {
     
       });
     });
-    socket.on("remove-device", (data: any) => {
-      console.log("Data", data)
-      if(userOptions[data.userId])
-      userOptions[data.userId].devices = userOptions[data.userId].devices.filter(
-        (device: any) => device.deviceIp !== data.deviceIp
-        );
-    })
   });
+  socket.on("remove-device", (data: any) => {
+    console.log("Data", data)
+    if(userOptions[data.userId])
+    userOptions[data.userId].devices = userOptions[data.userId].devices.filter(
+      (device: any) => device.deviceIp !== data.deviceIp
+      );
+  })
   socket.on("forceDisconnect", function () {
     socket.disconnect();
   });
