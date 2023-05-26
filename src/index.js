@@ -14,9 +14,29 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, cors_1.default)());
 const index_1 = __importDefault(require("./routes/index"));
 app.use("/", index_1.default);
-app.get("/", (req, res) => {
-    res.json({ message: "Welcome to the application." });
+// app.get("/", (req: any, res: { json: (arg0: { message: string }) => void }) => {
+//   res.json({ message: "Welcome to the application." });
+// });
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+    }
 });
-app.listen(PORT, () => {
+let users = {};
+io.on("connection", (socket) => {
+    socket.on("join", (data) => {
+        console.log(data);
+        users = Object.assign(Object.assign({}, users), { [data.userId]: [] });
+        if (data.userId === undefined || data.mac === undefined)
+            return;
+        //@ts-ignore
+        users[data.userId].push({ mac: data.mac, roomId: socket.id });
+        socket.join(data.userId);
+        //@ts-ignore
+        io.to(data.userId).emit('online-users', users[data.userId]);
+    });
+});
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}...`);
 });
