@@ -33,7 +33,8 @@ io.on("connection", (socket: Socket) => {
     console.log(data)
     if(!userOptions[data.userId]) userOptions[data.userId] = {};
     if(!userOptions[data.userId].devices) userOptions[data.userId].devices = [];
-    userOptions[data.userId].devices.push({ deviceInfo: data.deviceInfo, deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
+    if(!userOptions[data.userId].devices.find((device: any) => device.deviceIp === data.deviceIp))
+      userOptions[data.userId].devices.push({ deviceInfo: data.deviceInfo, deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
 
     console.log(userOptions)
 
