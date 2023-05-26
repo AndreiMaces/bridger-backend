@@ -33,7 +33,7 @@ io.on("connection", (socket: Socket) => {
     console.log(data)
     if(!userOptions[data.userId]) userOptions[data.userId] = {};
     if(!userOptions[data.userId].devices) userOptions[data.userId].devices = [];
-    userOptions[data.userId].devices.push({ deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
+    userOptions[data.userId].devices.push({ deviceInfo: data.deviceInfo, deviceIp: data.deviceIp, link: sha256(data.userId + data.deviceIp), hasGyroscope: true });
 
     console.log(userOptions)
 
@@ -48,7 +48,7 @@ io.on("connection", (socket: Socket) => {
           io.emit(device.link  + 'gyroscope', gyroscopeData);
         });
       });
-      
+
     });
 
   })
