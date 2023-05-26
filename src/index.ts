@@ -12,6 +12,7 @@ app.use(cors());
 
 import routes from "./routes/index";
 import { Socket } from "socket.io";
+import { sha256 } from "js-sha256";
 app.use("/", routes);
 
 // app.get("/", (req: any, res: { json: (arg0: { message: string }) => void }) => {
@@ -29,20 +30,20 @@ let users = {};
 io.on("connection", (socket: Socket) => {
   let userId = "";
   socket.on("join", (data: any) => {
-    userId = data.userId;
+    const link = sha256(data.userId + data.deviceName);
     console.log(data)
     users = {...users, [data.userId]: []}
     //@ts-ignore
-    users[data.userId].push(data);
+    users[data.userId].push({ deviceIp: data.deviceIp, link });
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
     setInterval(() => {
       //@ts-ignore
       io.emit(data.userId + 'online-users', users[data.userId]);
     }, 500);
-    socket.on(userId + "gyroscope", (gyroscopeData: any) => {
+    socket.on(link + "gyroscope", (gyroscopeData: any) => {
       console.log(data.userId)
-      io.emit(userId + "gyroscope", gyroscopeData);
+      io.emit(link + "gyroscope", gyroscopeData);
     })
   })
   socket.on('forceDisconnect', function(){
