@@ -25,8 +25,7 @@ const signup = async (req: GenericRequest<typeof AuthRegisterRequest>, res: Resp
     return res.json(user);
 };
 
-const resendEmailConfirmation = async (req: Request<typeof AuthLoginRequest>, res: Response) => {
-  AuthLoginRequest.parse(req.body);
+const resendEmailConfirmation = async (req: Request, res: Response) => {
 
   const user = await UserRepository.getUserByEmail(req.body.email);
 
