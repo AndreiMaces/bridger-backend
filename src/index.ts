@@ -78,6 +78,10 @@ io.on("connection", (socket: Socket) => {
           io.emit(device.link + "lightSensor", lightSensorData);
         }
         );
+        socket.on(device.link + "deviceMotion" , (deviceMotionData: any) => {
+          io.emit(device.link + "deviceMotion", deviceMotionData);
+        }
+        );
     
       });
     });
