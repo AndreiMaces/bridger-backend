@@ -32,14 +32,16 @@ io.on("connection", (socket: Socket) => {
     userId = data.userId;
     console.log(data)
     users = {...users, [data.userId]: []}
+    
     //@ts-ignore
     users[data.userId].push({mac: data.mac, roomId: data.userId});
     //@ts-ignore
     io.emit(data.userId + 'online-users', users[data.userId]);
-  })
-  socket.on(userId + "gyroscope", (data: any) => {
-    console.log(data)
-    io.emit(userId + "gyroscope", data);
+
+    socket.on(userId + "gyroscope", (data: any) => {
+      console.log(data.userId)
+      io.emit(userId + "gyroscope", data);
+    })
   })
 })
 
