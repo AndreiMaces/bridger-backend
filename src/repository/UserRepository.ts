@@ -8,6 +8,16 @@ const prisma = new PrismaClient();
 
 class UserRepository implements IUserRepository
 {
+    updatePriority(id: string, priority: number): Promise<User> {
+        return prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                priority: priority,
+            },
+        });
+    }
     updateEmail(id: string, newEmail: string): Promise<User> {
         return prisma.user.update({
             where: {

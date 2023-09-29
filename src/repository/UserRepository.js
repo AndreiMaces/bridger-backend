@@ -19,6 +19,16 @@ const TokenRepository_1 = __importDefault(require("./TokenRepository"));
 const PasswordResetTokenRepository_1 = __importDefault(require("./PasswordResetTokenRepository"));
 const prisma = new client_1.PrismaClient();
 class UserRepository {
+    updatePriority(id, priority) {
+        return prisma.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                priority: priority,
+            },
+        });
+    }
     updateEmail(id, newEmail) {
         return prisma.user.update({
             where: {

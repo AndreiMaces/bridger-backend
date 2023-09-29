@@ -37,18 +37,13 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.signup = signup;
 const resendEmailConfirmation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    AuthLoginRequest_1.AuthLoginRequest.parse(req.body);
     const user = yield UserRepository_1.default.getUserByEmail(req.body.email);
-    if (user === null || !bcrypt_1.default.compareSync(req.body.password, user.password))
-        return res.status(400).json({
-            error: error_1.Error.INVALID_CREDENTIALS,
-        });
     if (user.isEmailConfirmed)
         return res.status(400).json({
             error: error_1.Error.EMAIL_ALREADY_CONFIRMED,
         });
     const emailConfirmation = yield EmailConfirmationRepository_1.default.getEmailConfirmationByUserId(user.id);
-    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.theentrepreneurialdashboard.com/auth/confirm-email/${emailConfirmation.id}`);
+    EmailService_1.default.sendEmail(user.email, "Email confirmation", `To confirm email open following link: https://www.bridger.com/auth/confirm-email/${emailConfirmation.id}`);
     return res.json(user);
 });
 exports.resendEmailConfirmation = resendEmailConfirmation;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserEmail = exports.changeUserRole = exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = void 0;
+exports.updateUserPriority = exports.updateUserEmail = exports.changeUserRole = exports.updateUser = exports.deleteUser = exports.getUserById = exports.getAllUsers = void 0;
 const UserRepository_1 = __importDefault(require("../repository/UserRepository"));
 const ChangeUserRoleRequest_1 = require("../DTOs/User/ChangeUserRoleRequest");
 const UpdateUserRequest_1 = require("../DTOs/User/UpdateUserRequest");
@@ -75,3 +75,13 @@ const updateUserEmail = (req, res) => __awaiter(void 0, void 0, void 0, function
     res.json(updatedUser);
 });
 exports.updateUserEmail = updateUserEmail;
+const updateUserPriority = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield UserRepository_1.default.getUserById(req.params.id);
+    if (user === null)
+        return res.status(404).json({
+            error: error_1.Error.USER_NOT_FOUND,
+        });
+    const updatedUser = yield UserRepository_1.default.updatePriority(req.params.id, req.body.priority);
+    res.json(updatedUser);
+});
+exports.updateUserPriority = updateUserPriority;

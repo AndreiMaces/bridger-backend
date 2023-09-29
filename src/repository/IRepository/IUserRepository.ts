@@ -14,4 +14,5 @@ export interface IUserRepository {
     resetPassword(id: string, newPassword: string): Promise<User | null>;
     updateEmail(id: string, newEmail: string): Promise<User | null>;
     addDevice(id: string, name: string): Promise<User | null>;
+    updatePriority(id: string, priority: number): Promise<User | null>;
 }

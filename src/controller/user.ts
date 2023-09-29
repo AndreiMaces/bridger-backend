@@ -86,5 +86,18 @@ const updateUserEmail = async (
   res.json(updatedUser);
 }
 
+const updateUserPriority = async (
+  req: Request,
+  res: Response
+) => {
+  const user = await UserRepository.getUserById(req.params.id);
+  if(user === null) 
+    return res.status(404).json({
+      error: Error.USER_NOT_FOUND,
+    });
+  
+  const updatedUser = await UserRepository.updatePriority(req.params.id, req.body.priority);
+  res.json(updatedUser);
+}
 
-export { getAllUsers, getUserById, deleteUser, updateUser, changeUserRole ,  updateUserEmail,};
+export { getAllUsers, getUserById, deleteUser, updateUser, changeUserRole ,  updateUserEmail, updateUserPriority};
