@@ -18,7 +18,7 @@ export const HandleSocket = (socket: Socket) =>
 
       if(!currentCommand || currentCommand.priority < user.priority) {
         currentCommand = {...data, priority: user.priority};
-        io.emit(data.to, currentCommand.data);
+        io.emit(data.to, {direction: currentCommand.data, duration: data.duration});
         setTimeout(() => {
             currentCommand = null;
         }, data.duration);

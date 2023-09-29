@@ -17,7 +17,7 @@ const HandleSocket = (socket) => {
             let user = decoded.data;
             if (!currentCommand || currentCommand.priority < user.priority) {
                 currentCommand = Object.assign(Object.assign({}, data), { priority: user.priority });
-                _1.io.emit(data.to, currentCommand.data);
+                _1.io.emit(data.to, { direction: currentCommand.data, duration: data.duration });
                 setTimeout(() => {
                     currentCommand = null;
                 }, data.duration);
